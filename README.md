@@ -22,10 +22,6 @@ External Requirements:
   - If you want to write Golang, you will need `go`
   - etc.
 
-> **NOTE**
-> See [Install Recipes](#Install-Recipes) for additional Windows and Linux specific notes
-> and quick install snippets
-
 ### Install Kickstart
 
 > **NOTE**
