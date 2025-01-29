@@ -3,7 +3,7 @@
 
 return {
   'nvim-neo-tree/neo-tree.nvim',
-  version = '*',
+  versitn = '*',
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
@@ -11,7 +11,7 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<leader>e', '<cmd>Neotree toggle<CR>', desc = 'NeoTree Toggle' },
   },
   opts = {
     filesystem = {
@@ -19,6 +19,18 @@ return {
         mappings = {
           ['\\'] = 'close_window',
         },
+      },
+      filtered_items = {
+        always_show = {
+          '.gitignored',
+        },
+        always_show_by_pattern = {
+          '.env*',
+        },
+      },
+      follow_current_file = {
+        enable = true,
+        leave_dirs_open = true,
       },
     },
   },
