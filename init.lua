@@ -6,6 +6,11 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- vim.opt.mouse = 'a'
 vim.opt.showmode = false
+vim.opt.wrap = false
+vim.opt.tabstop = 4;
+vim.opt.shiftwidth = 4;
+-- TODO: This is causing errors?
+-- vim.opt.termguicolors = true
 
 vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'
@@ -82,7 +87,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  {                   -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
@@ -109,7 +114,7 @@ require('lazy').setup({
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  { -- Useful plugin to show you pending keybinds.
+  {                     -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -155,10 +160,12 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
+        { '<leader>c', group = '[C]ode',     mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
+        { '<leader>b', group = '[B]uffer' },
+        { '<leader>l', group = '[L]SP' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
@@ -181,7 +188,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
     },
     config = function()
       require('telescope').setup {
@@ -207,15 +214,15 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sc', builtin.resume, { desc = '[S]earch [C]ontinue' })
-      vim.keymap.set('n', '<leader>sr', builtin.oldfiles, { desc = '[S]earch [R]ecent' })
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = 'Search [H]elp' })
+      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = 'Search [K]eymaps' })
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = 'Search [F]iles' })
+      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = 'Search [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = 'Search current [W]ord' })
+      vim.keymap.set('n', '<leader>st', builtin.live_grep, { desc = 'Search [T]ext' })
+      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = 'Search [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sc', builtin.resume, { desc = 'Search [C]ontinue' })
+      vim.keymap.set('n', '<leader>sr', builtin.oldfiles, { desc = 'Search [R]ecent' })
       -- vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
@@ -260,7 +267,7 @@ require('lazy').setup({
       { 'williamboman/mason.nvim', opts = {} },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
@@ -332,6 +339,7 @@ require('lazy').setup({
         ts_ls = {},
         svelte = {},
         jdtls = {},
+
         docker_compose_language_service = {},
         -- See `:help lspconfig-all` for a list of all the pre-configured LSPs
         lua_ls = {
@@ -382,12 +390,12 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>lf',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = 'LSP [F]ormat buffer',
       },
     },
     opts = {
@@ -409,7 +417,7 @@ require('lazy').setup({
         }
       end,
       formatters_by_ft = {
-        lua = { 'stylua' },
+        -- lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -530,7 +538,7 @@ require('lazy').setup({
     end,
   },
 
-  { -- Color Scheme
+  {                  -- Color Scheme
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
@@ -613,10 +621,8 @@ require('lazy').setup({
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
-
-  -- TODO: My config
   require 'custom.plugins.init',
-  { import = 'custom.plugins' },
+  require 'custom.plugins.bufferline',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the

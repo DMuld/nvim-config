@@ -3,7 +3,7 @@
 
 return {
   'nvim-neo-tree/neo-tree.nvim',
-  versitn = '*',
+  version = '*',
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
@@ -11,13 +11,16 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '<leader>e', '<cmd>Neotree toggle<CR>', desc = 'NeoTree Toggle' },
+    { '<leader>e', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    -- { '<leader>e', '<cmd>Neotree toggle<CR>', desc = 'NeoTree Toggle' },
   },
   opts = {
     filesystem = {
       window = {
         mappings = {
-          ['\\'] = 'close_window',
+          ['<leader>e'] = 'close_window',
+          ['<bs>'] = 'close_node',
+          ['<S-bs>'] = 'navigate_up',
         },
       },
       filtered_items = {
