@@ -19,6 +19,7 @@ return {
         mappings = {
           ['<bs>'] = 'close_node',
           ['<S-bs>'] = 'navigate_up',
+          ['Î^Cy <BS>'] = 'navigate_up',
         },
       },
       filtered_items = {
