@@ -19,15 +19,17 @@ return {
         mappings = {
           ['<bs>'] = 'close_node',
           ['<S-bs>'] = 'navigate_up',
-          ['Î^Cy <BS>'] = 'navigate_up',
+          ['<c-h>'] = 'navigate_up', -- NOTE: for windows users
         },
       },
       filtered_items = {
         always_show = {
           '.gitignored',
+          '.gitignore',
         },
         always_show_by_pattern = {
           '.env*',
+          '.config*',
         },
       },
       follow_current_file = {
