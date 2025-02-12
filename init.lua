@@ -40,7 +40,7 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- Exiting custom terminal commands
+-- Exiting terminal commands
 -- TODO: Need to update these so they don't directly close it, but they toggle the terminal
 vim.keymap.set('t', '<M-1>', '<C-\\><C-n>', { desc = 'Exit h-term mode' })
 vim.keymap.set('t', '<M-2>', '<C-\\><C-n>', { desc = 'Exit v-term mode' })
@@ -621,8 +621,9 @@ require('lazy').setup({
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
-  require 'custom.plugins.init',
+  require 'custom.plugins.toggleterm',
   require 'custom.plugins.bufferline',
+  require 'custom.plugins.diffview',
   -- { import = 'custom.plugins' },
 }, {
   ui = {

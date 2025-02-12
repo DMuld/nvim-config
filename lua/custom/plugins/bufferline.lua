@@ -9,6 +9,9 @@ return {
           options = {
             always_show_bufferline = true,
             auto_toggle_bufferline = true,
+            pick = {
+              alphabet = "abcdefghijklmopqrstuvwxyzABCDEFGHIJKLMOPQRSTUVWXYZ1234567890",
+            },
           }
         }
       end,
