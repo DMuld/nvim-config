@@ -624,6 +624,7 @@ require('lazy').setup({
   require 'custom.plugins.toggleterm',
   require 'custom.plugins.bufferline',
   require 'custom.plugins.diffview',
+  -- require 'custom.plugins.startup',
   -- { import = 'custom.plugins' },
 }, {
   ui = {
