@@ -382,6 +382,13 @@ require('lazy').setup({
         },
       }
       require('lspconfig').gleam.setup({})
+      -- NOTE: Allows me to install more custom LSPs
+      require("mason").setup({
+        registries = {
+          "github:mason-org/mason-registry",
+          "github:Crashdummyy/mason-registry",
+        },
+      })
     end,
   },
 
@@ -626,6 +633,7 @@ require('lazy').setup({
   require 'custom.plugins.bufferline',
   require 'custom.plugins.diffview',
   require 'custom.plugins.rustaceanvim',
+  require 'custom.plugins.roslyn',
   -- require 'custom.plugins.neocodeium',
   -- require 'custom.plugins.startup',
   -- { import = 'custom.plugins' },
