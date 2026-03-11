@@ -381,6 +381,16 @@ require('lazy').setup({
       })
 
       local lspconfig = require('lspconfig')
+
+      -- Gleam: manual config using system binary
+      lspconfig.gleam.setup {
+        cmd = { 'gleam', 'lsp' },
+        filetypes = { 'gleam' },
+        root_dir = function(fname)
+          return require('lspconfig.util').root_pattern('gleam.toml', '.git')(fname)
+        end,
+      }
+
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
