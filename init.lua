@@ -41,7 +41,6 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Exiting terminal commands
--- TODO: Need to update these so they don't directly close it, but they toggle the terminal
 vim.keymap.set('t', '<M-1>', '<C-\\><C-n>', { desc = 'Exit h-term mode' })
 vim.keymap.set('t', '<M-2>', '<C-\\><C-n>', { desc = 'Exit v-term mode' })
 vim.keymap.set('t', '<M-3>', '<C-\\><C-n>', { desc = 'Exit f-term mode' })
