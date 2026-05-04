@@ -7,8 +7,8 @@ vim.opt.number = true
 -- vim.opt.mouse = 'a'
 vim.opt.showmode = false
 vim.opt.wrap = false
-vim.opt.tabstop = 4;
-vim.opt.shiftwidth = 4;
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
 -- TODO: This is causing errors?
 -- vim.opt.termguicolors = true
 
@@ -87,7 +87,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  {                   -- Adds git related signs to the gutter, as well as utilities for managing changes
+  { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
@@ -114,7 +114,7 @@ require('lazy').setup({
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  {                     -- Useful plugin to show you pending keybinds.
+  { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -160,7 +160,7 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>c', group = '[C]ode',     mode = { 'n', 'x' } },
+        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
@@ -188,7 +188,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       require('telescope').setup {
@@ -267,7 +267,7 @@ require('lazy').setup({
       { 'williamboman/mason.nvim', opts = {} },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      { 'j-hui/fidget.nvim',       opts = {} },
+      { 'j-hui/fidget.nvim', opts = {} },
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
@@ -380,16 +380,14 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
       })
 
-      local lspconfig = require('lspconfig')
-
-      -- Gleam: manual config using system binary
-      lspconfig.gleam.setup {
+      vim.lsp.config('gleam', {
         cmd = { 'gleam', 'lsp' },
         filetypes = { 'gleam' },
         root_dir = function(fname)
           return require('lspconfig.util').root_pattern('gleam.toml', '.git')(fname)
         end,
-      }
+      })
+      vim.lsp.enable 'gleam'
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -401,17 +399,18 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            lspconfig[server_name].setup(server)
+            vim.lsp.config(server_name, { server })
+            vim.lsp.enable(server_name)
           end,
         },
       }
       -- NOTE: Allows me to install more custom LSPs
-      require("mason").setup({
+      require('mason').setup {
         registries = {
-          "github:mason-org/mason-registry",
-          "github:Crashdummyy/mason-registry",
+          'github:mason-org/mason-registry',
+          'github:Crashdummyy/mason-registry',
         },
-      })
+      }
     end,
   },
 
@@ -580,7 +579,7 @@ require('lazy').setup({
   --     vim.cmd.hi 'Comment gui=none'
   --   end,
   -- },
-  {                  -- Color Scheme
+  { -- Color Scheme
     'rebelot/kanagawa.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
@@ -634,22 +633,57 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    lazy = false,
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'gleam' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
+    branch = 'main',
+    -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
+    config = function()
+      -- ensure basic parser are installed
+      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      require('nvim-treesitter').install(parsers)
+
+      ---@param buf integer
+      ---@param language string
+      local function treesitter_try_attach(buf, language)
+        if not vim.treesitter.language.add(language) then
+          return
+        end
+        vim.treesitter.start(buf, language)
+
+        local has_indent_query = vim.treesitter.query.get(language, 'indents') ~= nil
+
+        if has_indent_query then
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+      end
+
+      local available_parsers = require('nvim-treesitter').get_available()
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args)
+          local buf, filetype = args.buf, args.match
+
+          local language = vim.treesitter.language.get_lang(filetype)
+          if not language then
+            return
+          end
+
+          local installed_parsers = require('nvim-treesitter').get_installed 'parsers'
+
+          if vim.tbl_contains(installed_parsers, language) then
+            -- enable the parser if it is installed
+            treesitter_try_attach(buf, language)
+          elseif vim.tbl_contains(available_parsers, language) then
+            -- if a parser is available in `nvim-treesitter` auto install it, and enable it after the installation is done
+            require('nvim-treesitter').install(language):await(function()
+              treesitter_try_attach(buf, language)
+            end)
+          else
+            -- try to enable treesitter features in case the parser exists but is not available from `nvim-treesitter`
+            treesitter_try_attach(buf, language)
+          end
+        end,
+      })
+    end,
   },
 
   -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
